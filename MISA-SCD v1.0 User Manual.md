@@ -13,11 +13,11 @@ MISA-SCD v1.0是一款并行空间分辨随机团簇动力学（Spatially Resolv
 #### `inputs`：
 * `cascades`：级联缺陷文件，包含用于中子辐照模拟所需的级联缺陷的个数及空间分布信息。
 * `defectsAttributes`：缺陷特征能量参数文件，包含用于各种模拟条件所需的缺陷特征能量参数。
-* `mesh`：网格文件：包含用于模拟网格配置信息（网格为立方体），包括box的边界条件，网格尺寸，x、y、z方向的网格数量。
+* `pkas`：PKA谱：包含不同堆的PKA谱文件。
 #### `src`：
   包含所有源代码，其中src_MISASCD.f90是主程序。
-#### `tests`：
-  包含各算例，其中,每个算例配备一个parameters.txt，用于模拟的输入参数配置。  
+#### `examples`：
+  包含各算例，其中,每个算例配备一个 configure.in，用于模拟的输入参数配置。  
   RPV_FeCu_Cascade：FeCu合金，中子辐照模拟  
   RPV_FeCu_FrenkelPairs：FeCu合金，电子辐照模拟  
   SANS_Fe_Cascade：纯Fe，中子辐照模拟  
@@ -43,18 +43,17 @@ $ make
 
 ## 3. 运行
 ### 3.1. 准备输入配置文件
-MISA-SCD的输入配置文件包括三类：**基准参数配置文件**、**网格参数配置文件**、**缺陷特征能量参数配置文件**。其中，对于中子辐照模拟，还需包括**级联缺陷文件**，各配置文件说明如下
-* **基准参数配置文件** 位于各算例目录下，用户可根据模拟需求进行修改。
-* **网格参数配置文件** 位于inputs/mesh/目录下，用户可根据模拟需要的体系大小进行修改。在使用时，需在基准参数配置文件中，对应参数下方给出网格参数配置文件的相对路径。
-* **缺陷特征能量参数文件** 位于inputs/defectsAttributes/目录下，该目录下已提供若干缺陷特征能量参数文件，基本能够满足纯Fe、FeCu体系在辐照、热老化及退火条件下的模拟需求。在使用时，只需在基准参数配置文件中，对应参数下方给出缺陷特征能量参数文件的相对路径即可。如需修改能量参数请进入对应的文件中修改，关于文件的说明详见文件头部信息。用户也可以创建自己的参数文件，格式参考inputs/defectsAttributes/目录中给出的例子。
-* **级联缺陷文件** 位于inputs/cascades/目录下，该文件中的信息一般由分子动力学模拟级联碰撞过程获得。在使用时，需在基准参数配置文件中，对应参数下方给出级联缺陷文件的相对路径。在inputs/cascades/目录下已提供一个20KeV PKA产生的级联缺陷文件。用户也可以创建自己的级联缺陷文件，格式参考提供的例子。
+MISA-SCD的输入配置文件包括三类：`基准参数配置文件（configure.in）`、`缺陷特征能量参数配置文件（inputs/defectsAttributes/Defects.txt）`。其中，对于中子辐照模拟，还需包括`级联缺陷文件（inputs/cascades/xK_xKeV.txt）`，各配置文件说明如下
+* `基准参数配置文件` 位于各算例目录下，用户可根据模拟需求进行修改，其中包含模拟所需的网格数量设置。
+* `缺陷特征能量参数文件` 位于inputs/defectsAttributes/目录下，该目录下已提供若干缺陷特征能量参数文件，基本能够满足纯Fe、FeCu体系在辐照、热老化及退火条件下的模拟需求。在使用时，只需在基准参数配置文件中，对应参数下方给出缺陷特征能量参数文件的相对路径即可。如需修改能量参数请进入对应的文件中修改，关于文件的说明详见文件头部信息。用户也可以创建自己的参数文件，格式参考inputs/defectsAttributes/目录中给出的例子。
+* `级联缺陷文件` 位于inputs/cascades/目录下，该文件中的信息一般由分子动力学模拟级联碰撞过程获得。在使用时，需在基准参数配置文件中，对应参数下方给出级联缺陷文件的相对路径。在inputs/cascades/目录下已提供一个20KeV PKA产生的级联缺陷文件。用户也可以创建自己的级联缺陷文件，格式参考提供的例子。
   
 关于配置文件中各参数的相关说明请参考**输入配置项说明**章节。
 ### 3.2. 运行MISA-SCD
 > 在相应算例的文件夹下运行可在执行文件misascd.  
-> 注意：进程数不能小于网格数，要保证每个进程至少一个网格。运行不同规模的模拟之前，先检查inputs/meshes中对应的网格配置文件中的网格数是否满足此条件。
+> 注意：进程数不能小于网格数，要保证每个进程至少一个网格。
 
-MISA-SCD可通过`mpirun`命令运行，下面的示例中，使用8个MPI进程，parameters.txt为基准参数配置文件。
+MISA-SCD可通过`mpirun`命令运行，下面的示例中，使用8个MPI进程，configure.in为基准参数配置文件。
 ```bash
 $ cd $MISA_SCD_PATH/tests/example_test_filename/
 $ mpirun -n 8 ../../src/misascd parameters.txt   #实际使用时../../src/misascd替换为可执行文件misa的实际路径
@@ -77,7 +76,7 @@ $ #SBATCH -t 10:00:00
 $ #SBATCH -N 1
 $ #SBATCH -n 32
 
-mpirun -n 32 ../../src/misascd parameters.txt   #实际使用时../../src/misascd替换为可执行文件misa的实际路径
+mpirun -n 32 ../../src/misascd configure.in   #实际使用时../../src/misascd替换为可执行文件misa的实际路径
 ```
 
 ## 4. 用MISA-SCD模拟缺陷演化过程
@@ -92,12 +91,12 @@ MISA-SCD基于空间分辨随机团簇动力学（Spatially Resolved Stochastic 
 5. 体系时间前进$\delta t$。
 
 <div  align="center">    
-<img src="./figures/MISA-SCDBox.png" width = "60%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/MISA-SCDBox.png" width = "50%" align=center />
 </div>
 <center>图 4-1 MISA-SCD空间区域划分示意图</center>
 
 <div  align="center">    
-<img src="./figures/reactions.jpg" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/reactions.jpg" width = "40%" align=center />
 </div>
 <center>图 4-2 MISA-SCD中各类反应示意图</center>
 
@@ -117,31 +116,31 @@ MISA-SCD基于空间分辨随机团簇动力学（Spatially Resolved Stochastic 
 FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas.txt，该文件中主要包含：缺陷中所含点缺陷的最大类型数、点缺陷的类型及其形成能（$E_f$）、点缺陷及小团簇的类型及其迁移能（$E_m$）和扩散前置因子（$D_0$）（用于计算该缺陷的扩散率（$D$））、用于计算大团簇扩散率的信息、小团簇的类型及其结合能（$E_b$）、用于计算大团簇结合能的信息、允许的反应类型及参与反应的缺陷类型信息。下面逐一说明：
 1. **缺陷类型：**
 <div  align="center">    
-<img src="./figures/species.png" width = "30%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/species.png" width = "20%" align=center />
 </div>
 默认为4，即MISA-SCD中用一个长度为4的数组存储缺陷类型，数组第一个元素表示该缺陷中所含Cu原子个数，第二个元素表该缺陷中所含空位个数，第三个元素中表示该团簇中所含自间隙原子的个数（该值大于0表示该缺陷为可动的自间隙团簇），第四个元素同样表示该团徐中所含自间隙原子的个数（该值大于0表示该缺陷为不可动的自间隙团簇）。
 
-2. **点缺陷的类型及其形成能（$E_f$）：**
+1. **点缺陷的类型及其形成能（$E_f$）：**
 <div  align="center">    
-<img src="./figures/Ef.png" width = "60%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/Ef.png" width = "50%" align=center />
 </div>
 
 * 57行：`formationEnergies`为标识，表示下面开始是缺陷的形成能信息。  
 * 59~60行：`numSingle`的值为3，表示有3个形成能。  
 * 62~63：缺陷类型及其对应的形成能，`1 0 0 0`表示该缺陷为Cu原子，其对应的形成能为1.77eV。
 
-3. **点缺陷及小团簇的类型及其迁移能（$E_m$）和扩散前置因子（$D_0$）：**
+1. **点缺陷及小团簇的类型及其迁移能（$E_m$）和扩散前置因子（$D_0$）：**
 <div  align="center">    
-<img src="./figures/Em.png" width = "40%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/Em.png" width = "40%" align=center />
 </div>
 
 * 69行：`diffusionPrefactors`为标识，表示下面开始是缺陷的迁移能和扩散前置因子信息。  
 * 71~72行：`numSingle`的值为3，表示有3个迁移能和扩散前置因子。  
 * 74~75：缺陷类型及其对应的扩散前置因子和迁移能，`1 0 0 0`表示该缺陷为Cu原子，其对应的扩散前置因子为$6.3\times10^{13} {nm}^2/s$，迁移能为2.29eV。
 
-4. **用于计算大团簇扩散率的信息：**
+1. **用于计算大团簇扩散率的信息：**
 <div  align="center">    
-<img src="./figures/EmFunc.png" width = "70%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/EmFunc.png" width = "60%" align=center />
 </div>
 在MISA-SCD中，大团簇的扩散率由经验公式计算得出，不同的缺陷，计算公式不同。  
 
@@ -151,9 +150,9 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 * 87行：计算扩散率的公式标识，对于不同的缺陷类型，有不同的计算公式。  
 * 88行：计算该类缺陷的扩散率所需的参数个数，这里为0个，表示该类缺陷的扩散率为0 ，即尺寸大于等于2的Cu团簇不可动。若参数个数大于0个，则在下一行列出参数，并以空格隔开。
 
-5. **小团簇的类型及其结合能（$E_b$）：**
+1. **小团簇的类型及其结合能（$E_b$）：**
 <div  align="center">    
-<img src="./figures/Eb.png" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/Eb.png" width = "50%" align=center />
 </div>
 
 结合能是用来计算分解反应的反应速率的。
@@ -161,9 +160,9 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 * 110~111行：`numSingle`的值为46，表示46个结合能。  
 * 113~114：缺陷类型及其对应的结合能，`2 0 0 0`表示该缺陷为含2个Cu原子Cu团簇，其分解出去1个Cu原子（即`1 0 0 0`）所需的结合能是0.19eV。
 
-6. **用于计算大团簇结合能的信息：**
+1. **用于计算大团簇结合能的信息：**
 <div  align="center">    
-<img src="./figures/EbFunc.png" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/EbFunc.png" width = "50%" align=center />
 </div>
 在MISA-SCD中，大团簇的结合能由经验公式计算得出，不同的缺陷，计算公式不同。  
 
@@ -174,13 +173,13 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 * 213行：计算该类缺陷的结合能所需的参数个数，这里为3个。
 * 214行：依次列出所需的3个参数的值。
 
-7. **允许的反应类型及参与反应的缺陷类型信息**
+1. **允许的反应类型及参与反应的缺陷类型信息**
    
 MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体采用哪个公式，由该文件中的`fType`给出。
 * Dissociation反应：
 参与Dissociation反应的反应物为1个，产物为2个（一个为点缺陷，另一个为产物为反应物分解出1个点缺陷后转变成为的缺陷）。
 <div  align="center">    
-<img src="./figures/Dissoc.png" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/Dissoc.png" width = "50%" align=center />
 </div>
 
 289行：反应标识。  
@@ -192,7 +191,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * Diffusion反应：
 参与Diffusion反应的反应物和产物都为1个，缺陷类型不变。
 <div  align="center">    
-<img src="./figures/diff.png" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/diff.png" width = "50%" align=center />
 </div>
 
 317行：反应标识。  
@@ -204,7 +203,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * SinkRemoval反应：
 参与SinkRemoval反应的反应物为1个，产物为0个。
 <div  align="center">    
-<img src="./figures/sink.png" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/sink.png" width = "50%" align=center />
 </div>
 
 335行：反应标识。  
@@ -216,7 +215,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * Clustering反应：
 参与Clustering反应的反应物为2个，产物为0个/1个/2个，具体视反应物的类型而定。
 <div  align="center">    
-<img src="./figures/clu.png" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/clu.png" width = "50%" align=center />
 </div>
 
 356行：反应标识。  
@@ -228,14 +227,14 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 ### 配置级联缺陷文件
 该参数文件仅中子辐照模拟时用到。一个文件中可以包含多组级联缺陷信息，一般是同样PKA能量下的级联碰撞模拟获得的。
 <div  align="center">    
-<img src="./figures/cas1.png" width = "100%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/cas1.png" width = "100%" align=center />
 </div>
 
 1行：平均移位原子数量。  
 3行：该文件中由9组级联缺陷。  
 下面依次列出各组级联缺陷：
 <div  align="center">    
-<img src="./figures/cas2.png" width = "60%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/cas2.png" width = "60%" align=center />
 </div>
 
 5行：该组级联缺陷所包含的缺陷个数。  
@@ -258,7 +257,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 输出文件包括两个：屏幕输出和totdat X.out，其中“X”表示重复模拟时，第X次模拟的输出文件。对于一次模拟过程，中间时刻的结果和最终时刻的结果都写在同一个totdat X.out文件中，两次输出时刻的结果之间，用空行隔开，如下所示。
 
 <div  align="center">    
-<img src="./figures/output.png" width = "90%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/output.png" width = "90%" align=center />
 </div>
 
 包括三部分信息：  
@@ -274,20 +273,20 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 获取不同输出时刻下某类缺陷团簇的总数密度及平均尺寸数据后，可采用orgin软件进行绘图展示，下图给出了一个示例。
 
 <div  align="center">    
-<img src="./figures/CuNumberDensity-Cas.jpg" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/CuNumberDensity-Cas.jpg" width = "50%" align=center />
 </div>
 <center>图 4-3 Cu团簇数密度随时间和DPA的变化</center>
 
 <div  align="center">    
-<img src="./figures/CuAverageRadius-Cas.jpg" width = "50%" alt="MISA-SCD模拟区域分解示意图" align=center />
+<img src="./figures/CuAverageRadius-Cas.jpg" width = "50%" align=center />
 </div>
 <center>图 4-4 Cu团簇平均半径随时间和DPA的变化</center>
 
 ## 5. 输入配置项说明
-这里仅给出**基准参数配置文件**及**网格参数配置文件**中各配置项的说明，对于**缺陷特征能量参数配置文件**
+这里仅给出**基准参数配置文件**中各配置项的说明，对于**缺陷特征能量参数配置文件**
 及**级联缺陷文件**的配置说明请参见章节**4. 示例**。
 ### 5.1. 基准参数配置文件
-例如：parameters.txt，其中的信息分为三部分：**控制参数**、**模拟参数**、**输出控制参数**、**细网格参数**，各部分参数项说明如下：
+例如：parameters.txt，其中的信息分为三部分：**控制参数**、**模拟参数**、**输出控制参数**、**网格参数**，各部分参数项说明如下：
 
 **-----------控制参数项-----------**
 
@@ -433,31 +432,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 类型：integr  
 说明：可选项。所含Cu原子个数及空位个数之和大于该值的Cu_空位复合团簇参与统计。若**totdatToggle**设置为`yea`，则必须设置该值。
 
-**-----------细网格参数项-----------**
-
-***fineLength***  
-类型：double precision  
-说明：可选项。细网格的尺寸，单位：nm。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
-
-***numxFine***  
-类型：integer  
-说明：可选项。x方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
-
-***numyFine***  
-类型：integer  
-说明：可选项。y方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
-
-***numzFine***  
-类型：integer  
-说明：可选项。z方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
-
-注意：${fineLength}^{3}\times(numxFine\times numyFine\times numzFine) \le length^{3}$
-
-#### 5.2. 网格参数配置文件
-
-***meshType***  
-类型：字符串  
-说明：必选项。box的边界条件，`periodic` 或 `freeSurfaces`，默认为 `periodic`。
+**-----------网格参数项-----------**
 
 ***length***  
 类型：double precision  
@@ -475,4 +450,20 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 类型：integer  
 说明：必选项。z方向的细网格个数，单位：无。该值要大于等于z方向的进程数。
 
+***fineLength***  
+类型：double precision  
+说明：可选项。细网格的尺寸，单位：nm。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
 
+***numxFine***  
+类型：integer  
+说明：可选项。x方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
+
+***numyFine***  
+类型：integer  
+说明：可选项。y方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
+
+***numzFine***  
+类型：integer  
+说明：可选项。z方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
+
+注意：fineLength*fineLength*fineLength <= length*length*length
