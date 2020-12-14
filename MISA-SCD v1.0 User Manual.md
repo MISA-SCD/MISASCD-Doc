@@ -91,12 +91,12 @@ MISA-SCD基于空间分辨随机团簇动力学（Spatially Resolved Stochastic 
 5. 体系时间前进$\delta t$。
 
 <div  align="center">    
-<img src="./figures/MISA-SCDBox.png" width = "50%" align=center />
+<img src="./figures/MISA-SCDBox.png" width = "40%" align=center />
 </div>
 <center>图 4-1 MISA-SCD空间区域划分示意图</center>
 
 <div  align="center">    
-<img src="./figures/reactions.jpg" width = "40%" align=center />
+<img src="./figures/reactions.jpg" width = "30%" align=center />
 </div>
 <center>图 4-2 MISA-SCD中各类反应示意图</center>
 
@@ -122,7 +122,7 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 
 1. **点缺陷的类型及其形成能（$E_f$）：**
 <div  align="center">    
-<img src="./figures/Ef.png" width = "50%" align=center />
+<img src="./figures/Ef.png" width = "40%" align=center />
 </div>
 
 * 57行：`formationEnergies`为标识，表示下面开始是缺陷的形成能信息。  
@@ -131,7 +131,7 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 
 1. **点缺陷及小团簇的类型及其迁移能（$E_m$）和扩散前置因子（$D_0$）：**
 <div  align="center">    
-<img src="./figures/Em.png" width = "40%" align=center />
+<img src="./figures/Em.png" width = "30%" align=center />
 </div>
 
 * 69行：`diffusionPrefactors`为标识，表示下面开始是缺陷的迁移能和扩散前置因子信息。  
@@ -140,7 +140,7 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 
 1. **用于计算大团簇扩散率的信息：**
 <div  align="center">    
-<img src="./figures/EmFunc.png" width = "60%" align=center />
+<img src="./figures/EmFunc.png" width = "40%" align=center />
 </div>
 在MISA-SCD中，大团簇的扩散率由经验公式计算得出，不同的缺陷，计算公式不同。  
 
@@ -152,7 +152,7 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 
 1. **小团簇的类型及其结合能（$E_b$）：**
 <div  align="center">    
-<img src="./figures/Eb.png" width = "50%" align=center />
+<img src="./figures/Eb.png" width = "35%" align=center />
 </div>
 
 结合能是用来计算分解反应的反应速率的。
@@ -162,7 +162,7 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 
 1. **用于计算大团簇结合能的信息：**
 <div  align="center">    
-<img src="./figures/EbFunc.png" width = "50%" align=center />
+<img src="./figures/EbFunc.png" width = "35%" align=center />
 </div>
 在MISA-SCD中，大团簇的结合能由经验公式计算得出，不同的缺陷，计算公式不同。  
 
@@ -179,7 +179,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * Dissociation反应：
 参与Dissociation反应的反应物为1个，产物为2个（一个为点缺陷，另一个为产物为反应物分解出1个点缺陷后转变成为的缺陷）。
 <div  align="center">    
-<img src="./figures/Dissoc.png" width = "50%" align=center />
+<img src="./figures/Dissoc.png" width = "35%" align=center />
 </div>
 
 289行：反应标识。  
@@ -191,7 +191,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * Diffusion反应：
 参与Diffusion反应的反应物和产物都为1个，缺陷类型不变。
 <div  align="center">    
-<img src="./figures/diff.png" width = "50%" align=center />
+<img src="./figures/diff.png" width = "30%" align=center />
 </div>
 
 317行：反应标识。  
@@ -203,7 +203,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * SinkRemoval反应：
 参与SinkRemoval反应的反应物为1个，产物为0个。
 <div  align="center">    
-<img src="./figures/sink.png" width = "50%" align=center />
+<img src="./figures/sink.png" width = "30%" align=center />
 </div>
 
 335行：反应标识。  
@@ -215,7 +215,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * Clustering反应：
 参与Clustering反应的反应物为2个，产物为0个/1个/2个，具体视反应物的类型而定。
 <div  align="center">    
-<img src="./figures/clu.png" width = "50%" align=center />
+<img src="./figures/clu.png" width = "35%" align=center />
 </div>
 
 356行：反应标识。  
@@ -227,14 +227,14 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 ### 配置级联缺陷文件
 该参数文件仅中子辐照模拟时用到。一个文件中可以包含多组级联缺陷信息，一般是同样PKA能量下的级联碰撞模拟获得的。
 <div  align="center">    
-<img src="./figures/cas1.png" width = "100%" align=center />
+<img src="./figures/cas1.png" width = "75%" align=center />
 </div>
 
 1行：平均移位原子数量。  
 3行：该文件中由9组级联缺陷。  
 下面依次列出各组级联缺陷：
 <div  align="center">    
-<img src="./figures/cas2.png" width = "60%" align=center />
+<img src="./figures/cas2.png" width = "45%" align=center />
 </div>
 
 5行：该组级联缺陷所包含的缺陷个数。  
@@ -257,7 +257,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 输出文件包括两个：屏幕输出和totdat X.out，其中“X”表示重复模拟时，第X次模拟的输出文件。对于一次模拟过程，中间时刻的结果和最终时刻的结果都写在同一个totdat X.out文件中，两次输出时刻的结果之间，用空行隔开，如下所示。
 
 <div  align="center">    
-<img src="./figures/output.png" width = "90%" align=center />
+<img src="./figures/output.png" width = "75%" align=center />
 </div>
 
 包括三部分信息：  
@@ -273,12 +273,12 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 获取不同输出时刻下某类缺陷团簇的总数密度及平均尺寸数据后，可采用orgin软件进行绘图展示，下图给出了一个示例。
 
 <div  align="center">    
-<img src="./figures/CuNumberDensity-Cas.jpg" width = "50%" align=center />
+<img src="./figures/CuNumberDensity-Cas.jpg" width = "45%" align=center />
 </div>
 <center>图 4-3 Cu团簇数密度随时间和DPA的变化</center>
 
 <div  align="center">    
-<img src="./figures/CuAverageRadius-Cas.jpg" width = "50%" align=center />
+<img src="./figures/CuAverageRadius-Cas.jpg" width = "45%" align=center />
 </div>
 <center>图 4-4 Cu团簇平均半径随时间和DPA的变化</center>
 
