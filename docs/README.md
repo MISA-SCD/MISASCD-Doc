@@ -120,7 +120,7 @@ FeCu体系中子辐照模拟的缺陷特征能量参数文件为FeCu_Defects_Cas
 
 1. **点缺陷的类型及其形成能（$E_f$）：**
 <div  align="center">    
-<img src="./figures/Ef.png" width = "40%" align=center />
+<img src="./figures/EF.png" width = "40%" align=center />
 </div>
 
 * 57行：`formationEnergies`为标识，表示下面开始是缺陷的形成能信息。  
