@@ -213,7 +213,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 * Clustering反应：
 参与Clustering反应的反应物为2个，产物为0个/1个/2个，具体视反应物的类型而定。
 <div  align="center">    
-<img src="./figures/clu.png" width = "35%" align=center />
+<img src="./figures/Clu.png" width = "35%" align=center />
 </div>
 
 356行：反应标识。  
