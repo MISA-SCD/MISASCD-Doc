@@ -445,6 +445,7 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 ***length***  
 类型：double precision  
 说明：必选项。网格的边长，单位:nm。
+注意：当模拟中子辐照，且**meshingType** 的值为 `nonAdaptive` 时，网格大小应近似匹配cascade的范围。
 
 ***numx***  
 类型：integer  
@@ -474,4 +475,4 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 类型：integer  
 说明：可选项。z方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
 
-注意：fineLength*fineLength*fineLength <= length*length*length
+注意：fineLength^2^$\times$numxFine$\times$numyFine$\times$numzFine < length^2^
