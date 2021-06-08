@@ -474,4 +474,4 @@ MISA-SCD中，不同反应的反应速率由不同的公式计算得出，具体
 类型：integer  
 说明：可选项。z方向的细网格个数，单位：无。当 **meshingType** 的值为 `adaptive` 时，需要设置该值。
 
-注意：${fineLength}^2 \times {numxFine} \times {numyFine} \times {numzFine} < {length}^2$
+注意：${fineLength}^{3} \times {numxFine} \times {numyFine} \times {numzFine} < {length}^{3}$
